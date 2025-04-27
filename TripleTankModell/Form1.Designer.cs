@@ -29,11 +29,11 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series5 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series6 = new System.Windows.Forms.DataVisualization.Charting.Series();
             chartMain = new System.Windows.Forms.DataVisualization.Charting.Chart();
             btnStart = new Button();
             btnStop = new Button();
@@ -55,37 +55,41 @@
             btnValveOutDown = new Button();
             btnValveOutUp = new Button();
             lblValveOut = new Label();
+            tbValve12 = new TextBox();
+            lblValve12 = new Label();
+            btnValve12Down = new Button();
+            btnValve12Up = new Button();
             ((System.ComponentModel.ISupportInitialize)chartMain).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
             // chartMain
             // 
-            chartArea1.Name = "ChartArea1";
-            chartMain.ChartAreas.Add(chartArea1);
+            chartArea2.Name = "ChartArea1";
+            chartMain.ChartAreas.Add(chartArea2);
             chartMain.Dock = DockStyle.Top;
-            legend1.Name = "Legend1";
-            chartMain.Legends.Add(legend1);
+            legend2.Name = "Legend1";
+            chartMain.Legends.Add(legend2);
             chartMain.Location = new Point(0, 0);
             chartMain.Name = "chartMain";
-            series1.BorderWidth = 3;
-            series1.ChartArea = "ChartArea1";
-            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            series1.Legend = "Legend1";
-            series1.Name = "z1";
-            series2.BorderWidth = 3;
-            series2.ChartArea = "ChartArea1";
-            series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            series2.Legend = "Legend1";
-            series2.Name = "z2";
-            series3.BorderWidth = 3;
-            series3.ChartArea = "ChartArea1";
-            series3.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            series3.Legend = "Legend1";
-            series3.Name = "z3";
-            chartMain.Series.Add(series1);
-            chartMain.Series.Add(series2);
-            chartMain.Series.Add(series3);
+            series4.BorderWidth = 3;
+            series4.ChartArea = "ChartArea1";
+            series4.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series4.Legend = "Legend1";
+            series4.Name = "z1";
+            series5.BorderWidth = 3;
+            series5.ChartArea = "ChartArea1";
+            series5.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series5.Legend = "Legend1";
+            series5.Name = "z2";
+            series6.BorderWidth = 3;
+            series6.ChartArea = "ChartArea1";
+            series6.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series6.Legend = "Legend1";
+            series6.Name = "z3";
+            chartMain.Series.Add(series4);
+            chartMain.Series.Add(series5);
+            chartMain.Series.Add(series6);
             chartMain.Size = new Size(1698, 434);
             chartMain.TabIndex = 0;
             chartMain.Text = "chartMain";
@@ -123,7 +127,7 @@
             // lblInflow
             // 
             lblInflow.AutoSize = true;
-            lblInflow.Location = new Point(218, 462);
+            lblInflow.Location = new Point(358, 790);
             lblInflow.Name = "lblInflow";
             lblInflow.Size = new Size(42, 30);
             lblInflow.TabIndex = 4;
@@ -131,7 +135,7 @@
             // 
             // tbInflow
             // 
-            tbInflow.Location = new Point(147, 498);
+            tbInflow.Location = new Point(290, 819);
             tbInflow.Name = "tbInflow";
             tbInflow.ReadOnly = true;
             tbInflow.Size = new Size(175, 35);
@@ -141,7 +145,7 @@
             // 
             // btnInflowDown
             // 
-            btnInflowDown.Location = new Point(84, 491);
+            btnInflowDown.Location = new Point(227, 812);
             btnInflowDown.Name = "btnInflowDown";
             btnInflowDown.Size = new Size(57, 42);
             btnInflowDown.TabIndex = 6;
@@ -151,7 +155,7 @@
             // 
             // btnInflowUp
             // 
-            btnInflowUp.Location = new Point(328, 491);
+            btnInflowUp.Location = new Point(471, 812);
             btnInflowUp.Name = "btnInflowUp";
             btnInflowUp.Size = new Size(57, 42);
             btnInflowUp.TabIndex = 7;
@@ -162,7 +166,7 @@
             // pictureBox1
             // 
             pictureBox1.Image = Properties.Resources.TripleTank;
-            pictureBox1.Location = new Point(26, 560);
+            pictureBox1.Location = new Point(307, 552);
             pictureBox1.Name = "pictureBox1";
             pictureBox1.Size = new Size(944, 235);
             pictureBox1.SizeMode = PictureBoxSizeMode.AutoSize;
@@ -171,7 +175,7 @@
             // 
             // tbZ1
             // 
-            tbZ1.Location = new Point(178, 842);
+            tbZ1.Location = new Point(62, 470);
             tbZ1.Name = "tbZ1";
             tbZ1.ReadOnly = true;
             tbZ1.Size = new Size(175, 35);
@@ -180,7 +184,7 @@
             // 
             // tbZ3
             // 
-            tbZ3.Location = new Point(657, 842);
+            tbZ3.Location = new Point(62, 663);
             tbZ3.Name = "tbZ3";
             tbZ3.ReadOnly = true;
             tbZ3.Size = new Size(175, 35);
@@ -189,7 +193,7 @@
             // 
             // tbZ2
             // 
-            tbZ2.Location = new Point(419, 842);
+            tbZ2.Location = new Point(62, 568);
             tbZ2.Name = "tbZ2";
             tbZ2.ReadOnly = true;
             tbZ2.Size = new Size(175, 35);
@@ -199,7 +203,7 @@
             // lblZ1
             // 
             lblZ1.AutoSize = true;
-            lblZ1.Location = new Point(246, 809);
+            lblZ1.Location = new Point(132, 437);
             lblZ1.Name = "lblZ1";
             lblZ1.Size = new Size(34, 30);
             lblZ1.TabIndex = 12;
@@ -208,7 +212,7 @@
             // lblZ2
             // 
             lblZ2.AutoSize = true;
-            lblZ2.Location = new Point(486, 809);
+            lblZ2.Location = new Point(132, 526);
             lblZ2.Name = "lblZ2";
             lblZ2.Size = new Size(34, 30);
             lblZ2.TabIndex = 13;
@@ -217,7 +221,7 @@
             // lblZ3
             // 
             lblZ3.AutoSize = true;
-            lblZ3.Location = new Point(736, 809);
+            lblZ3.Location = new Point(132, 621);
             lblZ3.Name = "lblZ3";
             lblZ3.Size = new Size(34, 30);
             lblZ3.TabIndex = 14;
@@ -271,11 +275,53 @@
             lblValveOut.TabIndex = 19;
             lblValveOut.Text = "Xout";
             // 
+            // tbValve12
+            // 
+            tbValve12.Location = new Point(610, 823);
+            tbValve12.Name = "tbValve12";
+            tbValve12.ReadOnly = true;
+            tbValve12.Size = new Size(175, 35);
+            tbValve12.TabIndex = 20;
+            tbValve12.TextAlign = HorizontalAlignment.Center;
+            // 
+            // lblValve12
+            // 
+            lblValve12.AutoSize = true;
+            lblValve12.Location = new Point(669, 790);
+            lblValve12.Name = "lblValve12";
+            lblValve12.Size = new Size(55, 30);
+            lblValve12.TabIndex = 23;
+            lblValve12.Text = "X1-2";
+            // 
+            // btnValve12Down
+            // 
+            btnValve12Down.Location = new Point(560, 819);
+            btnValve12Down.Name = "btnValve12Down";
+            btnValve12Down.Size = new Size(44, 39);
+            btnValve12Down.TabIndex = 24;
+            btnValve12Down.Text = "<";
+            btnValve12Down.UseVisualStyleBackColor = true;
+            btnValve12Down.Click += btnValve12Down_Click;
+            // 
+            // btnValve12Up
+            // 
+            btnValve12Up.Location = new Point(791, 818);
+            btnValve12Up.Name = "btnValve12Up";
+            btnValve12Up.Size = new Size(44, 40);
+            btnValve12Up.TabIndex = 25;
+            btnValve12Up.Text = ">";
+            btnValve12Up.UseVisualStyleBackColor = true;
+            btnValve12Up.Click += btnValve12Up_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(12F, 30F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1698, 912);
+            ClientSize = new Size(1698, 911);
+            Controls.Add(btnValve12Up);
+            Controls.Add(btnValve12Down);
+            Controls.Add(lblValve12);
+            Controls.Add(tbValve12);
             Controls.Add(lblValveOut);
             Controls.Add(btnValveOutUp);
             Controls.Add(btnValveOutDown);
@@ -328,5 +374,11 @@
         private Button btnValveOutDown;
         private Button btnValveOutUp;
         private Label lblValveOut;
+        private TextBox tbValve12;
+        private Button button1;
+        private Button button2;
+        private Label lblValve12;
+        private Button btnValve12Down;
+        private Button btnValve12Up;
     }
 }

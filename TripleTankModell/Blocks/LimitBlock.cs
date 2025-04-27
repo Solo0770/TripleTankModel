@@ -12,14 +12,18 @@ namespace TripleTankModell.Blocks
         public double Min { get; set; }
         public double Max { get; set; }
 
+        public LimitBlock(double min, double max)
+        {
+            Min = min;
+            Max = max;
+        }
+
         public override void Update(double deltaTime)
         {
-            if (Input < Min)
-                Output = Min;
-            else if (Input > Max)
-                Output = Max;
-            else
-                Output = Input;
+            if (Input < Min) Output = Min;
+            else if (Input > Max) Output = Max;
+            else Output = Input;
         }
     }
 }
+

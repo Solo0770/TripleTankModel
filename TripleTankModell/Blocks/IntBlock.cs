@@ -9,8 +9,9 @@ namespace TripleTankModell.Blocks
     public class IntBlock : BaseBlock
     {
         private double prev = 0;
-        private double dt;
         private double sum = 0;
+        private readonly double dt;
+
         public double Input { get; set; }
 
         public IntBlock(double dt)
@@ -20,9 +21,18 @@ namespace TripleTankModell.Blocks
 
         public override void Update(double deltaTime)
         {
-            sum += (prev + Input) * dt / 2;
+            sum += (prev + Input) * this.dt / 2;
             prev = Input;
             Output = sum;
         }
+
+        public void SetInitial(double value)
+        {
+            sum = value;
+            prev = 0;
+            Output = value;
+        }
     }
 }
+
+

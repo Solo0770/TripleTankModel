@@ -7,29 +7,25 @@ namespace TripleTankModell
 {
     public partial class Form1 : Form
     {
-        private TripleTankModell.Model.Model model;
+        private ObjectModel model;
         private double dt = 0.1;
         private double time = 0;
         private bool fastMode = false;
 
+        private double Valve12Control = 0;
+
         public Form1()
         {
             InitializeComponent();
-            model = new TripleTankModell.Model.Model();
+            model = new ObjectModel();
 
-            // Ініціалізація початкових значень
-            model.Pin = 0;
             modelTimer.Interval = 100;
             modelTimer.Tick += modelTimer_Tick;
 
             btnSpeed.Text = "x10";
-            tbInflow.Text = model.Pin.ToString("0.00");
-
-            tbZ1.Text = model.Tank1.Level.ToString("0.00");
-            tbZ2.Text = model.Tank2.Level.ToString("0.00");
-            tbZ3.Text = model.Tank3.Level.ToString("0.00");
 
             InitChart();
+            UpdateDisplay();
         }
 
         private void InitChart()
@@ -51,18 +47,24 @@ namespace TripleTankModell
             chartMain.ChartAreas[0].AxisY.Title = "Рівень";
         }
 
-        private void btnStart_Click(object sender, EventArgs e)
+        private void modelTimer_Tick(object sender, EventArgs e)
         {
-            
-            model.Update(dt);
-            AddChartPoint();
-            modelTimer.Start();
+            modelUpdate();
+        }
 
+        private void modelUpdate()
+        {
+            model.ValveIn.OpenPercent = model.ValveIn.OpenPercent;
+            model.Valve12.OpenPercent = Valve12Control;
+            model.ValveOut.OpenPercent = model.ValveOut.OpenPercent;
+
+            model.Update(dt);
+            time += dt;
+            AddChartPoint();
         }
 
         private void AddChartPoint()
         {
-
             double z1 = model.Tank1.Level;
             double z2 = model.Tank2.Level;
             double z3 = model.Tank3.Level;
@@ -71,11 +73,7 @@ namespace TripleTankModell
             chartMain.Series["z2"].Points.AddXY(time, z2);
             chartMain.Series["z3"].Points.AddXY(time, z3);
 
-            tbZ1.Text = z1.ToString("0.00");
-            tbZ2.Text = z2.ToString("0.00");
-            tbZ3.Text = z3.ToString("0.00");
-
-            tbInflow.Text = model.Pin.ToString("0.00");
+            UpdateDisplay();
 
             const int maxPoints = 10000;
             foreach (var series in chartMain.Series)
@@ -85,22 +83,37 @@ namespace TripleTankModell
             }
         }
 
+        private void UpdateDisplay()
+        {
+            tbZ1.Text = model.Tank1.Level.ToString("0.00");
+            tbZ2.Text = model.Tank2.Level.ToString("0.00");
+            tbZ3.Text = model.Tank3.Level.ToString("0.00");
+
+            tbInflow.Text = (model.ValveIn.OpenPercent * 100).ToString("0") + " %";
+            tbValveOut.Text = (model.ValveOut.OpenPercent * 100).ToString("0") + " %";
+            tbValve12.Text = (Valve12Control * 100).ToString("0") + " %";
+        }
+
+        private void btnStart_Click(object sender, EventArgs e)
+        {
+            modelTimer.Start();
+        }
 
         private void btnStop_Click(object sender, EventArgs e)
         {
             modelTimer.Stop();
         }
 
-        private void modelTimer_Tick(object sender, EventArgs e)
+        private void btnReset_Click(object sender, EventArgs e)
         {
-            
+            modelTimer.Stop();
 
-            model.Update(dt);
-            time += dt;
-            AddChartPoint();
-            System.Diagnostics.Debug.WriteLine($"In = {model.Tank3.Inflow:F4}, Out = {model.Tank3.Outflow:F4}, Δz = {model.Tank3.Inflow - model.Tank3.Outflow:F4}, z3 = {model.Tank3.Level:F2}");
+            foreach (var series in chartMain.Series)
+                series.Points.Clear();
 
-
+            time = 0;
+            model = new ObjectModel();
+            UpdateDisplay();
         }
 
         private void btnSpeed_Click(object sender, EventArgs e)
@@ -121,63 +134,63 @@ namespace TripleTankModell
 
         private void btnInflowUp_Click(object sender, EventArgs e)
         {
-            model.Pin += 0.1;
-            if (model.Pin > 10.0)
-                model.Pin = 10.0;
+            model.ValveIn.OpenPercent += 0.05;
+            if (model.ValveIn.OpenPercent > 1.0)
+                model.ValveIn.OpenPercent = 1.0;
 
-            tbInflow.Text = model.Pin.ToString("0.00");
+            UpdateDisplay();
         }
 
         private void btnInflowDown_Click(object sender, EventArgs e)
         {
-            model.Pin -= 0.1;
-            if (model.Pin < 0)
-                model.Pin = 0;
+            model.ValveIn.OpenPercent -= 0.05;
+            if (model.ValveIn.OpenPercent < 0.0)
+                model.ValveIn.OpenPercent = 0.0;
 
-            tbInflow.Text = model.Pin.ToString("0.00");
-        }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-        }
-
-        private void btnReset_Click(object sender, EventArgs e)
-        {
-            modelTimer.Stop();
-
-            foreach (var series in chartMain.Series)
-                series.Points.Clear();
-
-            time = 0;
-
-            model = new TripleTankModell.Model.Model();
-
-            model.Pin = 2.0;
-            tbInflow.Text = model.Pin.ToString("0.00");
-
-            tbZ1.Text = model.Tank1.Level.ToString("0.00");
-            tbZ2.Text = model.Tank2.Level.ToString("0.00");
-            tbZ3.Text = model.Tank3.Level.ToString("0.00");
+            UpdateDisplay();
         }
 
         private void btnValveOutUp_Click(object sender, EventArgs e)
         {
-            model.ValveOutControl += 0.05;
-            if (model.ValveOutControl > 1.0)
-                model.ValveOutControl = 1.0;
+            model.ValveOut.OpenPercent += 0.05;
+            if (model.ValveOut.OpenPercent > 1.0)
+                model.ValveOut.OpenPercent = 1.0;
 
-            tbValveOut.Text = (model.ValveOutControl * 100).ToString("0") + " %";
+            UpdateDisplay();
         }
 
         private void btnValveOutDown_Click(object sender, EventArgs e)
         {
-            model.ValveOutControl -= 0.05;
-            if (model.ValveOutControl < 0.0)
-                model.ValveOutControl = 0.0;
+            model.ValveOut.OpenPercent -= 0.05;
+            if (model.ValveOut.OpenPercent < 0.0)
+                model.ValveOut.OpenPercent = 0.0;
 
-            tbValveOut.Text = (model.ValveOutControl * 100).ToString("0") + " %";
+            UpdateDisplay();
         }
 
+        private void btnValve12Up_Click(object sender, EventArgs e)
+        {
+            Valve12Control += 0.05;
+            if (Valve12Control > 1.0)
+                Valve12Control = 1.0;
 
+            UpdateDisplay();
+        }
+
+        private void btnValve12Down_Click(object sender, EventArgs e)
+        {
+            Valve12Control -= 0.05;
+            if (Valve12Control < 0.0)
+                Valve12Control = 0.0;
+
+            UpdateDisplay();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+       
     }
 }

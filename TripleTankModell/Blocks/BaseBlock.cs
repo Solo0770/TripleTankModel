@@ -9,8 +9,9 @@ namespace TripleTankModell.Blocks
     public abstract class BaseBlock
     {
         public double Output { get; protected set; }
-
         public abstract void Update(double deltaTime);
     }
 }
+
+
 
