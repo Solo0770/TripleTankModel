@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Globalization;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 using TripleTankModell.Model;
+using TripleTankModell.Blocks;
 
 namespace TripleTankModell
 {
@@ -14,10 +16,14 @@ namespace TripleTankModell
 
         private double Valve12Control = 0;
 
+        private PIDBlock pid;
+        private bool isAuto = true;
+
         public Form1()
         {
             InitializeComponent();
             model = new ObjectModel();
+            pid = new PIDBlock(dt);
 
             modelTimer.Interval = 100;
             modelTimer.Tick += modelTimer_Tick;
@@ -35,6 +41,7 @@ namespace TripleTankModell
             chartMain.Series.Add("z1");
             chartMain.Series.Add("z2");
             chartMain.Series.Add("z3");
+            chartMain.Series.Add("E");
 
             foreach (var s in chartMain.Series)
             {
@@ -44,7 +51,7 @@ namespace TripleTankModell
             }
 
             chartMain.ChartAreas[0].AxisX.Title = "Час (с)";
-            chartMain.ChartAreas[0].AxisY.Title = "Рівень";
+            chartMain.ChartAreas[0].AxisY.Title = "Рівень / Помилка";
         }
 
         private void modelTimer_Tick(object sender, EventArgs e)
@@ -54,7 +61,28 @@ namespace TripleTankModell
 
         private void modelUpdate()
         {
-            model.ValveIn.OpenPercent = model.ValveIn.OpenPercent;
+            double setPoint = 0;
+
+            if (isAuto)
+            {
+                if (!double.TryParse(tbKp.Text, NumberStyles.Float, CultureInfo.InvariantCulture, out double kp)) return;
+                if (!double.TryParse(tbTi.Text, NumberStyles.Float, CultureInfo.InvariantCulture, out double ti)) return;
+                if (!double.TryParse(tbKd.Text, NumberStyles.Float, CultureInfo.InvariantCulture, out double kd)) return;
+                if (!double.TryParse(tbSetPoint.Text, NumberStyles.Float, CultureInfo.InvariantCulture, out setPoint)) return;
+
+                pid.K = kp;
+                pid.Ti = ti;
+                pid.Kd = kd;
+
+                pid.SetPoint = setPoint;
+                pid.Feedback = model.Tank1.Level; // тепер просто передаємо рівень
+
+                pid.IsAuto = true;
+                pid.Update(dt);
+
+                model.ValveIn.OpenPercent = pid.Output;
+            }
+
             model.Valve12.OpenPercent = Valve12Control;
             model.ValveOut.OpenPercent = model.ValveOut.OpenPercent;
 
@@ -63,15 +91,24 @@ namespace TripleTankModell
             AddChartPoint();
         }
 
+
+
         private void AddChartPoint()
         {
             double z1 = model.Tank1.Level;
             double z2 = model.Tank2.Level;
             double z3 = model.Tank3.Level;
+            double error = 0;
+
+            if (double.TryParse(tbSetPoint.Text, NumberStyles.Float, CultureInfo.InvariantCulture, out double setPoint))
+            {
+                error = setPoint - z1;
+            }
 
             chartMain.Series["z1"].Points.AddXY(time, z1);
             chartMain.Series["z2"].Points.AddXY(time, z2);
             chartMain.Series["z3"].Points.AddXY(time, z3);
+            chartMain.Series["E"].Points.AddXY(time, error);
 
             UpdateDisplay();
 
@@ -82,6 +119,8 @@ namespace TripleTankModell
                     series.Points.RemoveAt(0);
             }
         }
+
+     
 
         private void UpdateDisplay()
         {
@@ -94,15 +133,8 @@ namespace TripleTankModell
             tbValve12.Text = (Valve12Control * 100).ToString("0") + " %";
         }
 
-        private void btnStart_Click(object sender, EventArgs e)
-        {
-            modelTimer.Start();
-        }
-
-        private void btnStop_Click(object sender, EventArgs e)
-        {
-            modelTimer.Stop();
-        }
+        private void btnStart_Click(object sender, EventArgs e) => modelTimer.Start();
+        private void btnStop_Click(object sender, EventArgs e) => modelTimer.Stop();
 
         private void btnReset_Click(object sender, EventArgs e)
         {
@@ -112,85 +144,80 @@ namespace TripleTankModell
                 series.Points.Clear();
 
             time = 0;
+
             model = new ObjectModel();
+            pid = new PIDBlock(dt);
+            pid.Reset();
+
+
+            model.ValveIn.OpenPercent = 0.0;
+            model.Valve12.OpenPercent = 0.0;
+            model.ValveOut.OpenPercent = 0.0;
+            Valve12Control = 0.0;
+
+            pid.IsAuto = isAuto;
+
             UpdateDisplay();
         }
+
 
         private void btnSpeed_Click(object sender, EventArgs e)
         {
             fastMode = !fastMode;
-
-            if (fastMode)
-            {
-                modelTimer.Interval = 10;
-                btnSpeed.Text = "x10";
-            }
-            else
-            {
-                modelTimer.Interval = 100;
-                btnSpeed.Text = "x1";
-            }
+            modelTimer.Interval = fastMode ? 10 : 100;
+            btnSpeed.Text = fastMode ? "x10" : "x1";
         }
 
         private void btnInflowUp_Click(object sender, EventArgs e)
         {
-            model.ValveIn.OpenPercent += 0.05;
-            if (model.ValveIn.OpenPercent > 1.0)
-                model.ValveIn.OpenPercent = 1.0;
-
-            UpdateDisplay();
+            if (!isAuto)
+            {
+                model.ValveIn.OpenPercent = Math.Min(model.ValveIn.OpenPercent + 0.05, 1.0);
+                UpdateDisplay();
+            }
         }
 
         private void btnInflowDown_Click(object sender, EventArgs e)
         {
-            model.ValveIn.OpenPercent -= 0.05;
-            if (model.ValveIn.OpenPercent < 0.0)
-                model.ValveIn.OpenPercent = 0.0;
-
-            UpdateDisplay();
+            if (!isAuto)
+            {
+                model.ValveIn.OpenPercent = Math.Max(model.ValveIn.OpenPercent - 0.05, 0.0);
+                UpdateDisplay();
+            }
         }
+
 
         private void btnValveOutUp_Click(object sender, EventArgs e)
         {
-            model.ValveOut.OpenPercent += 0.05;
-            if (model.ValveOut.OpenPercent > 1.0)
-                model.ValveOut.OpenPercent = 1.0;
-
+            model.ValveOut.OpenPercent = Math.Min(model.ValveOut.OpenPercent + 0.05, 1.0);
             UpdateDisplay();
         }
 
         private void btnValveOutDown_Click(object sender, EventArgs e)
         {
-            model.ValveOut.OpenPercent -= 0.05;
-            if (model.ValveOut.OpenPercent < 0.0)
-                model.ValveOut.OpenPercent = 0.0;
-
+            model.ValveOut.OpenPercent = Math.Max(model.ValveOut.OpenPercent - 0.05, 0.0);
             UpdateDisplay();
         }
 
         private void btnValve12Up_Click(object sender, EventArgs e)
         {
-            Valve12Control += 0.05;
-            if (Valve12Control > 1.0)
-                Valve12Control = 1.0;
-
+            Valve12Control = Math.Min(Valve12Control + 0.05, 1.0);
             UpdateDisplay();
         }
 
         private void btnValve12Down_Click(object sender, EventArgs e)
         {
-            Valve12Control -= 0.05;
-            if (Valve12Control < 0.0)
-                Valve12Control = 0.0;
-
+            Valve12Control = Math.Max(Valve12Control - 0.05, 0.0);
             UpdateDisplay();
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private void btnMode_Click(object sender, EventArgs e)
         {
-
+            isAuto = !isAuto;
+            pid.IsAuto = isAuto;
+            btnMode.Text = isAuto ? "Auto" : "Manual";
         }
 
-       
+        private void Form1_Load(object sender, EventArgs e) { }
     }
 }

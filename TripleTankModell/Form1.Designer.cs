@@ -29,11 +29,11 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Series series5 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Series series6 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
             chartMain = new System.Windows.Forms.DataVisualization.Charting.Chart();
             btnStart = new Button();
             btnStop = new Button();
@@ -59,37 +59,46 @@
             lblValve12 = new Label();
             btnValve12Down = new Button();
             btnValve12Up = new Button();
+            tbKp = new TextBox();
+            tbTi = new TextBox();
+            tbKd = new TextBox();
+            label1 = new Label();
+            label2 = new Label();
+            label3 = new Label();
+            tbSetPoint = new TextBox();
+            label4 = new Label();
+            btnMode = new Button();
             ((System.ComponentModel.ISupportInitialize)chartMain).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
             // chartMain
             // 
-            chartArea2.Name = "ChartArea1";
-            chartMain.ChartAreas.Add(chartArea2);
+            chartArea1.Name = "ChartArea1";
+            chartMain.ChartAreas.Add(chartArea1);
             chartMain.Dock = DockStyle.Top;
-            legend2.Name = "Legend1";
-            chartMain.Legends.Add(legend2);
+            legend1.Name = "Legend1";
+            chartMain.Legends.Add(legend1);
             chartMain.Location = new Point(0, 0);
             chartMain.Name = "chartMain";
-            series4.BorderWidth = 3;
-            series4.ChartArea = "ChartArea1";
-            series4.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            series4.Legend = "Legend1";
-            series4.Name = "z1";
-            series5.BorderWidth = 3;
-            series5.ChartArea = "ChartArea1";
-            series5.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            series5.Legend = "Legend1";
-            series5.Name = "z2";
-            series6.BorderWidth = 3;
-            series6.ChartArea = "ChartArea1";
-            series6.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            series6.Legend = "Legend1";
-            series6.Name = "z3";
-            chartMain.Series.Add(series4);
-            chartMain.Series.Add(series5);
-            chartMain.Series.Add(series6);
+            series1.BorderWidth = 3;
+            series1.ChartArea = "ChartArea1";
+            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series1.Legend = "Legend1";
+            series1.Name = "z1";
+            series2.BorderWidth = 3;
+            series2.ChartArea = "ChartArea1";
+            series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series2.Legend = "Legend1";
+            series2.Name = "z2";
+            series3.BorderWidth = 3;
+            series3.ChartArea = "ChartArea1";
+            series3.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series3.Legend = "Legend1";
+            series3.Name = "z3";
+            chartMain.Series.Add(series1);
+            chartMain.Series.Add(series2);
+            chartMain.Series.Add(series3);
             chartMain.Size = new Size(1698, 434);
             chartMain.TabIndex = 0;
             chartMain.Text = "chartMain";
@@ -313,11 +322,94 @@
             btnValve12Up.UseVisualStyleBackColor = true;
             btnValve12Up.Click += btnValve12Up_Click;
             // 
+            // tbKp
+            // 
+            tbKp.Location = new Point(1460, 632);
+            tbKp.Name = "tbKp";
+            tbKp.Size = new Size(175, 35);
+            tbKp.TabIndex = 26;
+            // 
+            // tbTi
+            // 
+            tbTi.Location = new Point(1460, 702);
+            tbTi.Name = "tbTi";
+            tbTi.Size = new Size(175, 35);
+            tbTi.TabIndex = 27;
+            // 
+            // tbKd
+            // 
+            tbKd.Location = new Point(1460, 773);
+            tbKd.Name = "tbKd";
+            tbKd.Size = new Size(175, 35);
+            tbKd.TabIndex = 28;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(1377, 637);
+            label1.Name = "label1";
+            label1.Size = new Size(37, 30);
+            label1.TabIndex = 29;
+            label1.Text = "Kp";
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Location = new Point(1377, 707);
+            label2.Name = "label2";
+            label2.Size = new Size(29, 30);
+            label2.TabIndex = 30;
+            label2.Text = "Ti";
+            // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.Location = new Point(1377, 778);
+            label3.Name = "label3";
+            label3.Size = new Size(37, 30);
+            label3.TabIndex = 31;
+            label3.Text = "Kd";
+            // 
+            // tbSetPoint
+            // 
+            tbSetPoint.Location = new Point(1460, 552);
+            tbSetPoint.Name = "tbSetPoint";
+            tbSetPoint.Size = new Size(175, 35);
+            tbSetPoint.TabIndex = 32;
+            // 
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.Location = new Point(1349, 557);
+            label4.Name = "label4";
+            label4.Size = new Size(89, 30);
+            label4.TabIndex = 33;
+            label4.Text = "SetPoint";
+            // 
+            // btnMode
+            // 
+            btnMode.Location = new Point(1340, 462);
+            btnMode.Name = "btnMode";
+            btnMode.Size = new Size(131, 40);
+            btnMode.TabIndex = 34;
+            btnMode.Text = "Auto";
+            btnMode.UseVisualStyleBackColor = true;
+            btnMode.Click += btnMode_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(12F, 30F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1698, 911);
+            Controls.Add(btnMode);
+            Controls.Add(label4);
+            Controls.Add(tbSetPoint);
+            Controls.Add(label3);
+            Controls.Add(label2);
+            Controls.Add(label1);
+            Controls.Add(tbKd);
+            Controls.Add(tbTi);
+            Controls.Add(tbKp);
             Controls.Add(btnValve12Up);
             Controls.Add(btnValve12Down);
             Controls.Add(lblValve12);
@@ -375,10 +467,18 @@
         private Button btnValveOutUp;
         private Label lblValveOut;
         private TextBox tbValve12;
-        private Button button1;
+        private Button btnMode;
         private Button button2;
         private Label lblValve12;
         private Button btnValve12Down;
         private Button btnValve12Up;
+        private TextBox tbKp;
+        private TextBox tbTi;
+        private TextBox tbKd;
+        private Label label1;
+        private Label label2;
+        private Label label3;
+        private TextBox tbSetPoint;
+        private Label label4;
     }
 }
