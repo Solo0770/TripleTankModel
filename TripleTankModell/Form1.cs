@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 using TripleTankModell.Model;
 using TripleTankModell.Blocks;
+using TripleTankModell.Optimization;
 
 namespace TripleTankModell
 {
@@ -13,6 +14,7 @@ namespace TripleTankModell
         private double dt = 0.1;
         private double time = 0;
         private bool fastMode = false;
+
 
         private double Valve12Control = 0;
 
@@ -42,6 +44,9 @@ namespace TripleTankModell
             chartMain.Series.Add("z2");
             chartMain.Series.Add("z3");
             chartMain.Series.Add("E");
+            chartMain.Series.Add("Before Optimization");
+            chartMain.Series.Add("After Optimization");
+
 
             foreach (var s in chartMain.Series)
             {
@@ -74,8 +79,10 @@ namespace TripleTankModell
                 pid.Ti = ti;
                 pid.Kd = kd;
 
+       
                 pid.SetPoint = setPoint;
-                pid.Feedback = model.Tank1.Level; // тепер просто передаємо рівень
+
+                pid.Feedback = model.Tank1.Level;
 
                 pid.IsAuto = true;
                 pid.Update(dt);
@@ -218,6 +225,59 @@ namespace TripleTankModell
             btnMode.Text = isAuto ? "Auto" : "Manual";
         }
 
+        private void ShowProcess(double[] vars, int series)
+        {
+            double maxTime = Criteria.maxTime;
+            double dt = Criteria.dt;
+            double time = 0;
+
+            ObjectModel model = new ObjectModel();
+            var pid = new PIDBlock(dt)
+            {
+                K = vars[0],
+                Ti = vars[1],
+                Kd = vars[2],
+                SetPoint = 5,
+                IsAuto = true
+            };
+
+            model.Valve12.OpenPercent = 1;
+            model.ValveOut.OpenPercent = 1;
+
+            chartMain.Series[series].Points.Clear();
+
+            int steps = (int)(maxTime / dt);
+            for (int i = 0; i < steps; i++)
+            {
+                pid.Feedback = model.Tank1.Level;
+                pid.Update(dt);
+                model.ValveIn.OpenPercent = pid.Output;
+                model.Update(dt);
+
+                chartMain.Series[series].Points.AddXY(time, model.Tank1.Level);
+                time += dt;
+            }
+        }
+
+
+        private void btnOptimize_Click(object sender, EventArgs e)
+        {
+            double[] p = { 1, 100, 0 }; 
+            double I1 = Criteria.I2Criteria(p); 
+            ShowProcess(p, 4); 
+
+            int steps = Optimizer.HookeJeeves(Criteria.I2Criteria, ref p); 
+            ShowProcess(p, 5); 
+
+            double I2 = Criteria.I2Criteria(p); 
+
+            MessageBox.Show($"Kp={p[0]:0.00}, Ti={p[1]:0.00}, Kd={p[2]:0.00}\nI1={I1:0.000} → I2={I2:0.000}\nSteps={steps}");
+        }
+
+
+
+
         private void Form1_Load(object sender, EventArgs e) { }
+
     }
 }

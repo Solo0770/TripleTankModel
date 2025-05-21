@@ -68,6 +68,7 @@
             tbSetPoint = new TextBox();
             label4 = new Label();
             btnMode = new Button();
+            btnOptimize = new Button();
             ((System.ComponentModel.ISupportInitialize)chartMain).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
@@ -396,11 +397,22 @@
             btnMode.UseVisualStyleBackColor = true;
             btnMode.Click += btnMode_Click;
             // 
+            // btnOptimize
+            // 
+            btnOptimize.Location = new Point(1327, 845);
+            btnOptimize.Name = "btnOptimize";
+            btnOptimize.Size = new Size(131, 40);
+            btnOptimize.TabIndex = 35;
+            btnOptimize.Text = "Optimize";
+            btnOptimize.UseVisualStyleBackColor = true;
+            btnOptimize.Click += btnOptimize_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(12F, 30F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1698, 911);
+            Controls.Add(btnOptimize);
             Controls.Add(btnMode);
             Controls.Add(label4);
             Controls.Add(tbSetPoint);
@@ -480,5 +492,6 @@
         private Label label3;
         private TextBox tbSetPoint;
         private Label label4;
+        private Button btnOptimize;
     }
 }
